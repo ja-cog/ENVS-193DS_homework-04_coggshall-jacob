@@ -1,0 +1,44 @@
+---
+title: "Homework_4_SecondTry"
+author: "Jacob Coggshall"
+date: "2023-05-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# Loading In Packages
+
+```{r}
+library(tidyverse)
+library(naniar)
+library(here)
+library(janitor)
+library(ggplot2)
+```
+
+```{r}
+fishdata <- read.csv(
+  here("data", "ntl6_v12.csv"))|>
+  clean_names()|>
+  filter(spname == "TROUTPERCH") |>
+  filter(!is.na(weight))
+```
+
+### Biological terms:
+H0: Fish length does not predict fish weight for trout perch across all sample years.
+HA: Fish length predicts fish weight for trout perch across all sample years.
+
+### Standard
+Null hypothesis (H0): There is no significant relationship between fish length (L) and fish weight (W) for trout perch across all sample years.
+
+Alternative hypothesis (HA): There is a significant relationship between fish length (L) and fish weight (W) for trout perch across all sample years.
+
+# Checking missing variable
+```{r}
+gg_miss_var(fishdata)
+```
+
+The missing data is not relevant to our hypotheses because we have filtered out all the rows where there was no reading for the weight of trout perch. By removing the rows with missing weight values, we ensure that our analysis includes only complete data points, allowing us to examine the relationship between fish length and fish weight without the confounding effect of missing values.
