@@ -17,6 +17,7 @@ library(naniar)
 library(here)
 library(janitor)
 library(ggplot2)
+library(dplyr)
 ```
 
 ```{r}
@@ -36,9 +37,23 @@ Null hypothesis (H0): There is no significant relationship between fish length (
 
 Alternative hypothesis (HA): There is a significant relationship between fish length (L) and fish weight (W) for trout perch across all sample years.
 
+### Mathmatical
+H0: The coefficient of fish length in the linear regression model is equal to zero.
+HA: The coefficient of fish length in the linear regression model is not equal to zero.
+
+
 # Checking missing variable
 ```{r}
 gg_miss_var(fishdata)
 ```
 
 The missing data is not relevant to our hypotheses because we have filtered out all the rows where there was no reading for the weight of trout perch. By removing the rows with missing weight values, we ensure that our analysis includes only complete data points, allowing us to examine the relationship between fish length and fish weight without the confounding effect of missing values.
+
+
+
+```{r}
+t_test_result <- t.test(fishdata$length, fishdata$weight)
+
+t_test_result
+```
+

@@ -363,7 +363,8 @@ display: none;
 library(naniar)
 library(here)
 library(janitor)
-library(ggplot2)</code></pre>
+library(ggplot2)
+library(dplyr)</code></pre>
 <pre class="r"><code>fishdata &lt;- read.csv(
   here(&quot;data&quot;, &quot;ntl6_v12.csv&quot;))|&gt;
   clean_names()|&gt;
@@ -384,6 +385,12 @@ years.</p>
 between fish length (L) and fish weight (W) for trout perch across all
 sample years.</p>
 </div>
+<div id="mathmatical" class="section level3">
+<h3>Mathmatical</h3>
+<p>H0: The coefficient of fish length in the linear regression model is
+equal to zero. HA: The coefficient of fish length in the linear
+regression model is not equal to zero.</p>
+</div>
 </div>
 <div id="checking-missing-variable" class="section level1">
 <h1>Checking missing variable</h1>
@@ -395,6 +402,20 @@ trout perch. By removing the rows with missing weight values, we ensure
 that our analysis includes only complete data points, allowing us to
 examine the relationship between fish length and fish weight without the
 confounding effect of missing values.</p>
+<pre class="r"><code>t_test_result &lt;- t.test(fishdata$length, fishdata$weight)
+
+t_test_result</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  fishdata$length and fishdata$weight
+## t = 119.61, df = 317.21, p-value &lt; 2.2e-16
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  78.81089 81.44704
+## sample estimates:
+## mean of x mean of y 
+## 85.517241  5.388276</code></pre>
 </div>
 
 
