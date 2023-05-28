@@ -55,5 +55,6 @@ The missing data is not relevant to our hypotheses because we have filtered out 
 t_test_result <- t.test(fishdata$length, fishdata$weight)
 
 t_test_result
+t_test_result
 ```
 
