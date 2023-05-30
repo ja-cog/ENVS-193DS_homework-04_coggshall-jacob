@@ -55,6 +55,60 @@ The missing data is not relevant to our hypotheses because we have filtered out 
 t_test_result <- t.test(fishdata$length, fishdata$weight)
 
 t_test_result
-t_test_result
+```
+
+```{r}
+cor_result <- cor.test(fishdata$length, fishdata$weight)
+
+print(cor_result)
+```
+
+# Testing Linearity
+
+```{r}
+ggplot(data = fishdata, aes(x = length, y = weight)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(x = "Fish Length", y = "Fish Weight",
+       title = "Scatter Plot of Fish Length vs. Fish Weight")
+```
+
+# Testing Normalilty
+
+```{r}
+# Create a histogram
+ggplot(data = fishdata, aes(x = weight)) +
+  geom_histogram(binwidth = 1, fill = "lightblue", color = "black") +
+  labs(x = "Fish Weight", y = "Frequency",
+       title = "Histogram of Fish Weight")
+
+# Create a Q-Q plot
+ggplot(data = fishdata, aes(sample = weight)) +
+  stat_qq() +
+  stat_qq_line() +
+  labs(x = "Theoretical Quantiles", y = "Sample Quantiles",
+       title = "Q-Q Plot of Fish Weight")
+```
+
+# Testing Homoscedasticity
+
+```{r}
+
+# Fit a linear regression model
+lm_model <- lm(weight ~ length, data = fishdata)
+
+# Extract the residuals and predicted values
+residuals <- lm_model$residuals
+predicted_values <- predict(lm_model)
+
+# Create a data frame with predicted values and residuals
+residual_df <- data.frame(Predicted = predicted_values, Residuals = residuals)
+
+# Create a scatter plot of residuals against predicted values
+ggplot(data = residual_df, aes(x = Predicted, y = Residuals)) +
+  geom_point() +
+  labs(x = "Predicted Values", y = "Residuals",
+       title = "Residuals vs. Predicted Values Plot")
+
 ```
 
