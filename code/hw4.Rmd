@@ -18,6 +18,7 @@ library(here)
 library(janitor)
 library(ggplot2)
 library(dplyr)
+library(gridExtra)
 ```
 
 ```{r}
@@ -66,24 +67,24 @@ print(cor_result)
 # Testing Linearity
 
 ```{r}
-ggplot(data = fishdata, aes(x = length, y = weight)) +
+linear <- ggplot(data = fishdata, aes(x = length, y = weight)) +
   geom_point() +
   geom_smooth(method = "lm", se = TRUE) +
   labs(x = "Fish Length", y = "Fish Weight",
-       title = "Scatter Plot of Fish Length vs. Fish Weight")
+       title = "Plot of Fish Length vs. Fish Weight")
 ```
 
 # Testing Normalilty
 
 ```{r}
 # Create a histogram
-ggplot(data = fishdata, aes(x = weight)) +
+histo <- ggplot(data = fishdata, aes(x = weight)) +
   geom_histogram(binwidth = 1, fill = "lightblue", color = "black") +
   labs(x = "Fish Weight", y = "Frequency",
        title = "Histogram of Fish Weight")
 
 # Create a Q-Q plot
-ggplot(data = fishdata, aes(sample = weight)) +
+qq <- ggplot(data = fishdata, aes(sample = weight)) +
   stat_qq() +
   stat_qq_line() +
   labs(x = "Theoretical Quantiles", y = "Sample Quantiles",
@@ -105,10 +106,34 @@ predicted_values <- predict(lm_model)
 residual_df <- data.frame(Predicted = predicted_values, Residuals = residuals)
 
 # Create a scatter plot of residuals against predicted values
-ggplot(data = residual_df, aes(x = Predicted, y = Residuals)) +
+scatter <- ggplot(data = residual_df, aes(x = Predicted, y = Residuals)) +
   geom_point() +
   labs(x = "Predicted Values", y = "Residuals",
        title = "Residuals vs. Predicted Values Plot")
 
 ```
+
+```{r}
+# Load the necessary packages
+library(gridExtra)
+
+# Arrange the plots in a grid layout
+full_grid <- grid.arrange(qq, scatter, histo, linear,ncol = 2, nrow = 2, widths = c(5, 7))
+```
+
+The scatter plot with a trendline shows the relationship between fish length and fish weight. By visually analyzing the plot, we can observe the general trend and determine that there is a positive or negative correlation between the two variables.
+
+
+The scatter plot of residuals against predicted values shows the distribution of the residuals across the range of predicted values. By examining the plot, we can assess that there is no significant deviation in the residuals.
+
+The histogram of fish weight displays the frequency distribution of fish weights, allowing us to observe the distribution's shape and any potential outliers. After examining the plot, we can determine the data is skewed to the left, indicating generally lower weights.
+
+
+The Q-Q plot compares the observed fish weight data to a theoretical normal distribution. If the data points fall approximately along a straight line, it suggests that the data follows a normal distribution. Deviations from the straight line may indicate departures from normality or systematic biases in the data.This dat looks generally normally distributed
+
+```{r}
+summary(fishdata)
+```
+
+The summary results indicate that the data consists of 290 observations collected annually from eleven primary lakes (Trout, Perch) (sampling frequency: annually, number of sites: 11). The year variable ranges from 1981 to 2022, with a median year of 1998. The depth variable ranges from -1.0000 to 1.0000, with a mean depth of -0.9931. The replicate number ranges from 1 to 19, with a median of 4. The length variable ranges from 54.00 to 120.00, with a mean length of 85.52. The weight variable ranges from 1.000 to 18.000, with a mean weight of 5.388. The study employed various sampling methods, including seine, traps, electrofishing, gill nets, and trammel nets, to capture fish species and obtain measurements like lengths and weights.
 
