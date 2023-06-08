@@ -2,7 +2,9 @@
 title: "Homework_4_SecondTry"
 author: "Jacob Coggshall"
 date: "2023-05-27"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
