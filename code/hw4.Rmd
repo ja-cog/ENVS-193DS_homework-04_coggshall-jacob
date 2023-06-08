@@ -135,5 +135,67 @@ The Q-Q plot compares the observed fish weight data to a theoretical normal dist
 summary(fishdata)
 ```
 
-The summary results indicate that the data consists of 290 observations collected annually from eleven primary lakes (Trout, Perch) (sampling frequency: annually, number of sites: 11). The year variable ranges from 1981 to 2022, with a median year of 1998. The depth variable ranges from -1.0000 to 1.0000, with a mean depth of -0.9931. The replicate number ranges from 1 to 19, with a median of 4. The length variable ranges from 54.00 to 120.00, with a mean length of 85.52. The weight variable ranges from 1.000 to 18.000, with a mean weight of 5.388. The study employed various sampling methods, including seine, traps, electrofishing, gill nets, and trammel nets, to capture fish species and obtain measurements like lengths and weights.
+```{r}
+# Fit a linear regression model
+model <- lm(weight ~ length, data = fishdata)
 
+# Print the model summary
+summary(model)
+```
+
+
+The data analysis, based on 290 observations from eleven primary lakes (Trout, Perch), revealed that fish length significantly predicts fish weight. The regression model showed a strong positive relationship between fish length and weight, with length explaining approximately 81.58% of the variability in weight. The findings suggest that as fish length increases, their weight tends to increase as well.
+
+```{r}
+# Perform ANOVA
+anova_result <- aov(weight ~ length, data = fishdata)
+
+# Generate ANOVA table
+anova_table <- summary(anova_result)
+
+# Print the ANOVA table
+print(anova_table)
+```
+
+```{r}
+# Perform ANOVA
+anova_result <- aov(weight ~ length, data = fishdata)
+
+# Extract ANOVA table
+anova_table <- broom::tidy(anova_result) %>%
+  select(df, sumsq, meansq, statistic, p.value) %>%
+  clean_names()
+
+# Format p-values without scientific notation
+anova_table$p_value <- format.pval(anova_table$p_value, digits = 3)
+
+# Rename columns
+colnames(anova_table) <- c("Source", "DF", "Sum_Sq", "Mean_Sq", "F_Value", "P_Value")
+
+# Print the summary table
+print(anova_table)
+
+#summary
+summary(fishdata)
+```
+
+
+The ANOVA table provides statistical information on the relationship between fish length and weight, indicating that there is a significant relationship between these variables (p-value < 2.2e-16). The summary object provides additional details such as the coefficient estimates, standard errors, t-values, and confidence intervals for the regression model. Both the ANOVA table and the summary object support the conclusion that fish length is a significant predictor of fish weight.
+
+```{r}
+# Create a scatter plot of the underlying data
+scatter_plot <- ggplot(data = fishdata, aes(x = length, y = weight)) +
+  geom_point() +
+  labs(x = "Fish Length", y = "Fish Weight") +
+  theme_minimal()
+
+# Add model predictions and confidence intervals
+model_plot <- scatter_plot +
+  geom_smooth(method = "lm", se = TRUE, fill = "lightblue", color = "blue") +
+  theme_minimal()
+
+# Display the final plot
+model_plot
+```
+
+Caption: Scatter plot showcasing the relationship between fish length and weight. The upward-sloping blue line indicates a positive correlation, suggesting that as the length of the fish increases, so does its weight. The shaded light blue areas surrounding the line represent the confidence intervals, indicating the range of plausible weight values for a given length. The plot suggests a strong and consistent association between fish length and weight, providing evidence for the predictive power of length in estimating the weight of trout and perch in the studied population.
